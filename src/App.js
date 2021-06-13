@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Header, MovieList, MovieDetails, Loading } from './components';
+import { Header, MovieList, MovieDetails, Loading, SearchBar } from './components';
 import * as axios from 'axios';
+
 
 class App extends Component {
 
@@ -48,6 +49,7 @@ class App extends Component {
     return (
       <div className="App d-flex flex-column">
         <Header />
+        <SearchBar updateMovies={ this.updateMovies }/>
         { this.state.loaded ? (
           <div className="d-flex flex-row flex-fill pt-4 p-2" >
             <MovieList 
