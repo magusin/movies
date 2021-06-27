@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Header, MovieList, MovieDetails, Loading, SearchBar } from './components';
-import * as axios from 'axios';
+import apiMovie, { apiMovieMap } from './conf/api.movie';
 
 
 class App extends Component {
@@ -13,6 +13,7 @@ class App extends Component {
       loaded: false
     }
   }
+
   updateSelectedMovie = (index) => {
     this.setState({
       selectedMovie: index
@@ -20,25 +21,16 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get('https://api.themoviedb.org/4/discover/movie', {
-      headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MWMyMGYzNmVhYTZhMzBkMTZkYzVjZTY0ODEwNjVhZSIsInN1YiI6IjYwYmNhNGRjOGRkYzM0MDA3ODdhNDhmMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pQhnyc4aS1nWoqgT3JvuTj-OgjmPS5OrvGFnPzlwkqc'
-      }
-    })
+    apiMovie.get('/discover/movie')
     .then( response => response.data.results ) 
     .then ( moviesApi => {
-      const movies = moviesApi.map( m => ({
-        img: 'https://image.tmdb.org/t/p/w500' + m.poster_path,
-        title: m.title,
-        details: m.release_date + ' | ' + m.vote_average + ' /10 (' + m.vote_count + ')',
-        description: m.overview,
-      }) )
+      const movies = moviesApi.map(apiMovieMap)
       this.updateMovies(movies);
     })
     .catch( err => console.log(err) );
   }
 
-  updateMovies(movies) {
+  updateMovies = (movies) => {
     this.setState({
       movies,
       loaded: true
